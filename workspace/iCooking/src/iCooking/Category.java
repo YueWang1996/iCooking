@@ -1,6 +1,7 @@
 package iCooking;
 
 import java.io.Serializable;
+import java.sql.*;
 
 /**
  * This class provides an implementation of category. Every Recipe belongs to a

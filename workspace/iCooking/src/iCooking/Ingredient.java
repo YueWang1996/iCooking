@@ -1,6 +1,7 @@
 package iCooking;
 
 import java.io.Serializable;
+import java.sql.*;
 
 /**
  * This class implements different ingredients.
