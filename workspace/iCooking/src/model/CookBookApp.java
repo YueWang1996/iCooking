@@ -1,4 +1,4 @@
-package iCooking;
+package model;
 
 
 /**
