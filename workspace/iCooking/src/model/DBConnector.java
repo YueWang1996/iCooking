@@ -23,9 +23,10 @@ public class DBConnector {
 			while (rset.next()) {
 				String recipeName = rset.getString("name");
 				int servingCount = rset.getInt("servings");
-				int recipeID = rset.getInt("recipe_id");
-				System.out.println(
-						"recipe ID: " + recipeID + ", recipe name: " + recipeName + ", servings: " + servingCount);
+				int prepTime = rset.getInt("preparationTime");
+				int cookingTime = rset.getInt("cookingTime");
+				System.out.println("recipe name: " + recipeName + ", servings: " + servingCount + ", preparation time: "
+						+ prepTime + ", cooking time: " + cookingTime);
 			}
 			con.close();
 		} catch (SQLException e) {
@@ -53,7 +54,8 @@ public class DBConnector {
 			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cookbook", "root", "");
 			Statement stmt = con.createStatement();
 			int rowCount = stmt.executeUpdate(
-					"INSERT INTO recipe (name, servings, preparationTime, cookingTime, description) VALUES(r.getRecipeName, r.getServings,r.getCookingTime, r.getPreparationTime)");
+					"INSERT INTO recipe (name, servings, preparationTime, cookingTime) VALUES('" + r.getRecipeName()
+							+ "', " + r.getServings() + ", " + r.getCookingTime() + ", " + r.getPreparationTime() + ")");
 			System.out.println("the row count of the updated recipe is " + rowCount);
 			con.close();
 		} catch (SQLException e) {
