@@ -57,6 +57,11 @@ public class DBConnector {
 					"INSERT INTO recipe (name, servings, preparationTime, cookingTime) VALUES('" + r.getRecipeName()
 							+ "', " + r.getServings() + ", " + r.getCookingTime() + ", " + r.getPreparationTime() + ")");
 			System.out.println("the row count of the updated recipe is " + rowCount);
+			
+			
+			//loop get prepstep
+			//insert into DB
+			
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
