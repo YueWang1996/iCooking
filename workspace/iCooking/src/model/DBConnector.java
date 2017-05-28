@@ -1,6 +1,7 @@
 package model;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * This class implements a connection to MySQL server. It realizes retrieving,
@@ -13,11 +14,24 @@ import java.sql.*;
 public class DBConnector {
 
 	/**
+	 * Gets the access to the database.
+	 * 
+	 * @return the connection to the database
+	 * @throws SQLException
+	 *             if a database access error occurs or this method is called on
+	 *             a closed connection
+	 */
+	public Connection access() throws SQLException {
+		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cookbook", "root", "");
+		return con;
+	}
+
+	/**
 	 * Retrieves results from the Database.
 	 */
 	public void retrieveResults() {
 		try {
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cookbook", "root", "");
+			Connection con = access();
 			Statement stmt = con.createStatement();
 			ResultSet rset = stmt.executeQuery("SELECT * FROM recipe;");
 			while (rset.next()) {
@@ -39,30 +53,51 @@ public class DBConnector {
 	 */
 	public void update() {
 		try {
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cookbook", "root", "");
+			Connection con = access();
 			Statement stmt = con.createStatement();
-			int rowCount = stmt.executeUpdate("INSERT INTO recipe (name, servings) VALUES('Xiao Longbao',4)");
-			System.out.println("the row count of the updated recipe is " + rowCount);
+			stmt.executeUpdate("INSERT INTO recipe (name, servings) VALUES('Xiao Longbao',4)");
+
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void update(Recipe r) {
+	public void insert(Recipe r) {
 		try {
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cookbook", "root", "");
+			Connection con = access();
 			Statement stmt = con.createStatement();
-			int rowCount = stmt.executeUpdate(
-					"INSERT INTO recipe (name, servings, preparationTime, cookingTime) VALUES('" + r.getRecipeName()
-							+ "', " + r.getServings() + ", " + r.getCookingTime() + ", " + r.getPreparationTime() + ")");
-			System.out.println("the row count of the updated recipe is " + rowCount);
-			
-			
-			//loop get prepstep
-			//insert into DB
+
+			stmt.executeUpdate("INSERT INTO recipe (name, servings, preparationTime, cookingTime) VALUES('"
+					+ r.getRecipeName() + "', " + r.getServings() + ", " + r.getCookingTime() + ", "
+					+ r.getPreparationTime() + ")");
+
+			ResultSet rset = stmt.executeQuery("select * from recipe order by recipe_id desc limit 1");
+
+			if (rset.next()) {
+				r.setRecipeID(rset.getInt(1));
+			}
+
+			ArrayList<String> prepStep = r.getPreparationStepList();
+
+			for (int i = 0; i < prepStep.size(); i++) {
+				stmt.executeUpdate("INSERT INTO preparation_step (recipe_id, step, description) VALUES ("
+						+ r.getRecipeID() + ", " + i + ", '" + prepStep.get(i) + "')");
+			}
+
+		
+
+			ArrayList<Ingredient> ingList = r.getIngredientList();
+
+			for (int i = 0; i < ingList.size(); i++) {
+				stmt.executeUpdate("INSERT INTO ingredient (recipe_id, name, quantity, unit, description) VALUES ("
+						+ r.getRecipeID() + ", '" + ingList.get(i).getIngredientName() + "', "
+						+ ingList.get(i).getIngredientAmount() + ", '" + ingList.get(i).getIngredientUnit() + "', '"
+						+ ingList.get(i).getIngredientDescription() + "')");
+			}
 			
 			con.close();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
