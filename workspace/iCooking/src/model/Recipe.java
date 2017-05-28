@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 class Recipe implements Serializable {
 
-	private long recipeID;
+	private int recipeID;
 	private String recipeName;
 	
 	// cuisine style of recipe
@@ -39,15 +39,15 @@ class Recipe implements Serializable {
 	 * constructor of Recipe
 	 * 
 	 * @param name
-	 * @param location
+	 * @param cuisine
 	 *            the style of the dish
-	 * @param serverAmount
+	 * @param serving
 	 *            the number of servers
 	 */
-	public Recipe(String name, String location, double serverAmount) {
+	public Recipe(String name, String cuisine, double serving) {
 		this.recipeName = name;
-		this.cuisine = location;
-		this.serving = serverAmount;
+		this.cuisine = cuisine;
+		this.serving = serving;
 	}
 
 	/**
@@ -55,7 +55,7 @@ class Recipe implements Serializable {
 	 * 
 	 * @return recipeID
 	 */
-	public long getRecipeID() {
+	public int getRecipeID() {
 		return recipeID;
 	}
 
@@ -64,7 +64,7 @@ class Recipe implements Serializable {
 	 * 
 	 * @param recipeID
 	 */
-	public void setRecipeID(long recipeID) {
+	public void setRecipeID(int recipeID) {
 		this.recipeID = recipeID;
 	}
 
